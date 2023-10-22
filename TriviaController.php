@@ -35,18 +35,24 @@ class TriviaController {
     */
     public function getCategories() {
 
-        $current_game = [];
-
-        foreach ($this->categories as $category) {
-            $cat_name = $category["category"];
-            for ($i = 0; $i < count($category["words"]); $i++) {
-                $cur_word = $category["words"][$i];
-                $temp_list = [$cat_name, $cur_word];
-                array_push($current_game, $temp_list);
-            }
+       if(isset($_SESSION["current_game"])) {
+            return $_SESSION["current_game"];
         }
-    
-        return $current_game;
+        else {
+            $current_game = [];
+            foreach ($this->categories as $category) {
+                $cat_name = $category["category"];
+                for ($i = 0; $i < count($category["words"]); $i++) {
+                    $cur_word = $category["words"][$i];
+                    $cur_word = strtolower($cur_word);
+
+                    $temp = array($cur_word => $cat_name);
+                    array_push($current_game, $temp);
+                }
+            }
+            $_SESSION["current_game"] = $current_game;
+            return $current_game;
+        }
     }
 
     /**
@@ -88,8 +94,13 @@ class TriviaController {
         $name = $_SESSION["name"];
         $email = $_SESSION["email"];
         $score = $_SESSION["score"];
-        $previous_guesses = $_SESSION["previous_guesses"];
-        $categories = $this->getCategories();
+        if(isset($_SESSION["previous_guesses"])) {
+            $previous_guesses = $_SESSION["previous_guesses"];
+        }
+        else {
+            $previous_guesses = [];
+        }
+        $current_game = $this->getCategories();
         include("/opt/src/trivia/templates/board.php");
     }
 
@@ -105,24 +116,82 @@ class TriviaController {
      */
     public function submitCategories() {
         $message = "";
-        if (isset($_POST["questionid"]) && is_numeric($_POST["questionid"])) {
-            
-            $question = $this->getQuestion($_POST["questionid"]);
+        $answer = "";
 
-            if (strtolower(trim($_POST["answer"])) == strtolower($question["answer"])) {
-                $message = "<div class=\"alert alert-success\" role=\"alert\">
-                Correct!
-                </div>";
-                $_SESSION["score"] += 5;
-            }
-            else {
+        if(isset($_POST["answer"])) {
+            $answer = $_POST["answer"];
+
+            $guesses = explode(" ", $answer);
+            $guesses = array_map('strtolower', $guesses);
+            
+            if(len($guesses) != 4){
                 $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                Incorrect! The correct answer was: {$question["answer"]}
+                Please enter 4 answers!
                 </div>";
+            } else {
+                $current_game = $_SESSION["current_game"];
+
+                $guess_categories = [];
+                foreach($guesses as $guess) {
+                    if(isset($guess_categories[$current_game[$guess]])) {
+                        $guess_categories[$current_game[$guess]] += 1;
+                    } else {
+                        $guess_categories[$current_game[$guess]] = 1;
+                    }
+                }
+
+                $incorrect = 0;
+                $max_guesses = 0;
+                $max_cat = "";
+                foreach($guess_categories as $cat => $num) {
+                    if($num > $max_guesses) {
+                        $max_guesses = $num;
+                        $max_cat = $cat;
+                    }
+                }
+
+                foreach($guess_categories as $cat => $num) {
+                    if($cat != $max_cat) {
+                        $incorrect += $num;
+                    }
+                }
+
+                if($incorrect == 0) {
+                    $message = "<div class=\"alert alert-success\" role=\"alert\">
+                    Correct!
+                    </div>";
+                    $_SESSION["score"] += 1;
+
+                    foreach($guesses as $guess) {
+                        unset($_SESSION["current_game"][$guess]);
+                    }
+
+                    $previousGuess = [$answer, $incorrect];
+                    array_push($_SESSION["previous_guesses"], $previousGuess);
+
+                    if(count($_SESSION["current_game"]) == 0) {
+                        $message = "<div class=\"alert alert-success\" role=\"alert\">
+                        You win!
+                        </div>";
+                        unset($_SESSION["current_game"]);
+                        
+                    }
+                } else {
+                    $message = "<div class=\"alert alert-danger\" role=\"alert\">
+                    Incorrect!
+                    </div>";
+                    $_SESSION["score"] += 1;
+                    $previousGuess = [$answer, $incorrect];
+                    array_push($_SESSION["previous_guesses"], $previousGuess);
+                }
             }
+        } else {
+            $message = "<div class=\"alert alert-danger\" role=\"alert\">
+            Please enter an answer!
+            </div>";
         }
 
-        $this->showQuestion($message);
+        $this->showCategories($message);
     }
 
     /**
