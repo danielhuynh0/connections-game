@@ -97,6 +97,7 @@ class TriviaController {
                 break;
             case "logout":
                 $this->logout();
+                break;
             default:
                 $this->showWelcome();
                 break;
@@ -147,11 +148,20 @@ class TriviaController {
                 $message = "<div class=\"alert alert-danger\" role=\"alert\">
                 Please enter 4 answers!
                 </div>";
+                $this->showCategories($message);
+                return;
             } else {
                 $current_game = $_SESSION["current_game"];
 
                 $guess_categories = [];
                 foreach($guesses as $guess) {
+                    if(!array_key_exists($guess, $current_game)){
+                        $message = "<div class=\"alert alert-danger\" role=\"alert\">
+                        Please enter words on the screen!
+                        </div>";
+                        $this->showCategories($message);
+                        return;
+                    }
                     if(isset($guess_categories[$current_game[$guess][1]])) {
                         $guess_categories[$current_game[$guess][1]] += 1;
                     } else {
@@ -197,6 +207,8 @@ class TriviaController {
                         unset($_SESSION["current_game"][$guess]);
                     }
 
+                    array_unshift($_SESSION["previous_guesses"], $ans_string);
+
                     if(count($_SESSION["current_game"]) == 0) {
                         $message = "<div class=\"alert alert-success\" role=\"alert\">
                         You win!
@@ -210,11 +222,21 @@ class TriviaController {
                     }
                 } else {
                     $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                    Incorrect!
-                    </div>";
-                    $_SESSION["score"] += 1;
-                    $previousGuess = [$answer, $incorrect];
-                    array_push($_SESSION["previous_guesses"], $previousGuess);
+                    Incorrect!";
+
+                    if($incorrect>2){
+                        $message .= " You are way off. </div>";
+                        $ans_string .= "Many were wrong.";
+                    }
+                    if($incorrect == 2){
+                        $message .= " You are 2 off. </div>";
+                        $ans_string .= "Two were wrong.";
+                    }
+                    if($incorrect == 1){
+                        $message .= " You are 1 off. </div>";
+                        $ans_string .= "One was wrong.";
+                    }
+                    array_unshift($_SESSION["previous_guesses"], $ans_string);
                     $this->showCategories($message);
                 }
             }
