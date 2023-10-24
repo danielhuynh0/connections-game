@@ -85,6 +85,12 @@ class TriviaController {
             case "answer":
                 $this->submitCategories();
                 break;
+            case "playagain":
+                $_SESSION["win"] = false;
+                $_SESSION["previous_guesses"] = [];
+                $_SESSION["score"] = 0;
+                $this->showCategories();
+                break;
             case "logout":
                 $this->logout();
             default:
@@ -182,7 +188,11 @@ class TriviaController {
                         You win!
                         </div>";
                         unset($_SESSION["current_game"]);
+                        $_SESSION["win"] = true;
+                        include("gameover.php");
                         
+                    } else {
+                        $this->showCategories($message);
                     }
                 } else {
                     $message = "<div class=\"alert alert-danger\" role=\"alert\">
@@ -191,15 +201,15 @@ class TriviaController {
                     $_SESSION["score"] += 1;
                     $previousGuess = [$answer, $incorrect];
                     array_push($_SESSION["previous_guesses"], $previousGuess);
+                    $this->showCategories($message);
                 }
             }
         } else {
             $message = "<div class=\"alert alert-danger\" role=\"alert\">
             Please enter an answer!
             </div>";
+            $this->showCategories($message);
         }
-
-        $this->showCategories($message);
     }
 
     /**
@@ -226,6 +236,7 @@ class TriviaController {
         session_destroy();
 
         session_start();
+
     }
 
 }
