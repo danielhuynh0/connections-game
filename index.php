@@ -13,6 +13,6 @@ spl_autoload_register(function ($classname) {
 });
         
 
-$trivia = new TriviaController($_GET);
+$trivia = new CategoryGameController($_GET);
 
 $trivia->run();
