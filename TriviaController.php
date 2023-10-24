@@ -215,6 +215,9 @@ class TriviaController {
                         </div>";
                         unset($_SESSION["current_game"]);
                         $_SESSION["win"] = true;
+                        $name = $_SESSION["name"];
+                        $email = $_SESSION["email"];
+                        $score = $_SESSION["score"];
                         include("gameover.php");
                         
                     } else {
