@@ -101,14 +101,14 @@ class TriviaController {
             $previous_guesses = [];
         }
         $current_game = $this->getCategories();
-        include("/opt/src/trivia/templates/board.php");
+        include("board.php");
     }
 
     /**
      * Show the welcome page to the user.
      */
     public function showWelcome() {
-        include("/opt/src/trivia/templates/welcome.php");
+        include("welcome.php");
     }
 
     /**
