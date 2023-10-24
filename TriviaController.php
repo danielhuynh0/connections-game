@@ -89,6 +89,9 @@ class TriviaController {
             case "answer":
                 $this->submitCategories();
                 break;
+            case "gameover":
+                $this->showGameOver();
+                break;
             case "playagain":
                 $_SESSION["win"] = false;
                 $_SESSION["previous_guesses"] = [];
@@ -128,6 +131,13 @@ class TriviaController {
      */
     public function showWelcome() {
         include("welcome.php");
+    }
+
+    public function showGameOver() {
+        $name = $_SESSION["name"];
+        $email = $_SESSION["email"];
+        $score = $_SESSION["score"];
+        include("gameover.php");
     }
 
     /**

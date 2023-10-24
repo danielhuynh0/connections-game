@@ -16,7 +16,7 @@
             <h1>PHP Connections</h1>
             <h4>Hello <?=$name?>! (<?=$email?>)</h4>
             <?php
-                if($_SESSION["win"] == true) {
+                if(isset($_SESSION["win"]) && $_SESSION["win"] == true) {
                     echo "<h4>You win!</h4>";
                 } else {
                     echo "<h4>You lose!</h4>";
