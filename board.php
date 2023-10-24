@@ -16,7 +16,7 @@
                 <h1>PHP Connections</h1>
                 <h4>Hello <?=$name?>! (<?=$email?>)</h4>
                 <h4>Guesses: <?=$score?></h4>
-                <h4><?=$message?></h4>
+                <?=$message?>
             </div>
         </div>
         <div class="row">
@@ -34,8 +34,8 @@
                         
                         $student_one = $current_game;
 
-                        $student_keys = array_keys($student_one);
-                        shuffle($student_keys);
+                        //$student_keys = array_keys($student_one);
+                        shuffle($student_one);
 
                         $html = "";
 
@@ -44,7 +44,7 @@
                         while($count<count($student_one)){
                             $html .= "<div class=\"row\">\n";
                             for($x = 0; $x<4; $x++){
-                                $html .= "\t<div class=\"col\">\n \t\t <label>" . $student_keys[$count] . "</label>\n</div>\n";
+                                $html .= "\t<div class=\"col\">\n \t\t <label>" . array_keys($student_one[$count])[0] . "</label>\n</div>\n";
                                 $count++;
                             }
                             $html .= "</div>\n";
@@ -68,6 +68,9 @@
             </div>
         </div>
         <div style="margin-top: 15px;">
+            <form action="?command=logout" method="post">
+                <button type="submit" class="btn btn-primary">Quit</button>
+            </form>
             <h4>You're previous guesses:</h4>
         </div>  
     </div>

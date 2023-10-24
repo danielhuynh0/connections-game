@@ -129,7 +129,7 @@ class TriviaController {
             $guesses = explode(" ", $answer);
             $guesses = array_map('strtolower', $guesses);
             
-            if(len($guesses) != 4){
+            if(count($guesses) != 4){
                 $message = "<div class=\"alert alert-danger\" role=\"alert\">
                 Please enter 4 answers!
                 </div>";
