@@ -40,13 +40,13 @@
                         $html = "";
 
                         $count=0;
+                        $keys=array_keys($student_one);
 
                         while($count<count($student_one)){
                             $html .= "<div class=\"row\">\n";
                             for($x = 0; $x<4; $x++){
-                                $key = array_keys($student_one[$count])[0];
-                                $html .= "\t<div class=\"col\">\n \t\t <label>" . $key . 
-                                ": " . $student_one[$count][$key][0] . "</label>\n</div>\n";
+                                $html .= "\t<div class=\"col\">\n \t\t <label>" . ($keys[$count]) . 
+                                ": " . $student_one[($keys[$count])][0] . "</label>\n</div>\n";
                                 $count++;
                             }
                             $html .= "</div>\n";
@@ -73,7 +73,15 @@
             <form action="?command=logout" method="post">
                 <button type="submit" class="btn btn-primary">Quit</button>
             </form>
+        </div>
+        <div style="margin-top: 15px;">
             <h4>You're previous guesses:</h4>
+            <?php
+                foreach($previous_guesses as $guess){
+                    $label = "<p>" . $guess . "</p>";
+                    echo $label;
+                }
+            ?>
         </div>  
     </div>
 

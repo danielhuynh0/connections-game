@@ -56,10 +56,11 @@ class TriviaController {
                 }
             }
             shuffle($current_game_w);
-            $current_game=[];
+            $current_game=array();
             for($x=0; $x<16; $x++){
-                $temp2 = array(($x+1) => ($current_game_w[$x]));
-                array_push($current_game, $temp2);
+                $current_game[($x+1)] = $current_game_w[$x];
+                //$temp2 = array(($x+1) => ($current_game_w[$x]));
+                //array_push($current_game, $temp2);
             }
             $_SESSION["current_game"] = $current_game;
             return $current_game;
@@ -109,6 +110,7 @@ class TriviaController {
             $previous_guesses = $_SESSION["previous_guesses"];
         }
         else {
+            $_SESSION["previous_guesses"] = [];
             $previous_guesses = [];
         }
         $current_game = $this->getCategories();
@@ -144,10 +146,10 @@ class TriviaController {
 
                 $guess_categories = [];
                 foreach($guesses as $guess) {
-                    if(isset($guess_categories[$current_game[$guess]])) {
-                        $guess_categories[$current_game[$guess]] += 1;
+                    if(isset($guess_categories[$current_game[$guess][1]])) {
+                        $guess_categories[$current_game[$guess][1]] += 1;
                     } else {
-                        $guess_categories[$current_game[$guess]] = 1;
+                        $guess_categories[$current_game[$guess][1]] = 1;
                     }
                 }
 
@@ -167,34 +169,54 @@ class TriviaController {
                     }
                 }
 
+                $guess_categories=[];
+
+                $_SESSION["score"] += 1;
+                $ans_string="You guessed [";
+                foreach($guesses as $guess){
+                    $ans_string .= $_SESSION["current_game"][$guess][0];
+                    $ans_string .= ", ";
+                }
+                $ans_string = substr($ans_string, 0, -2);
+                $ans_string .= "]. ";
+
                 if($incorrect == 0) {
                     $message = "<div class=\"alert alert-success\" role=\"alert\">
                     Correct!
                     </div>";
-                    $_SESSION["score"] += 1;
+
+                    $ans_string .= "That was correct!";
 
                     foreach($guesses as $guess) {
                         unset($_SESSION["current_game"][$guess]);
                     }
 
-                    $previousGuess = [$answer, $incorrect];
-                    array_push($_SESSION["previous_guesses"], $previousGuess);
-
                     if(count($_SESSION["current_game"]) == 0) {
                         $message = "<div class=\"alert alert-success\" role=\"alert\">
                         You win!
                         </div>";
-                        unset($_SESSION["current_game"]);
+                        //unset($_SESSION["current_game"]);
+
                         
                     }
                 } else {
                     $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                    Incorrect!
-                    </div>";
-                    $_SESSION["score"] += 1;
-                    $previousGuess = [$answer, $incorrect];
-                    array_push($_SESSION["previous_guesses"], $previousGuess);
+                    Incorrect!";
+
+                    if($incorrect>2){
+                        $message .= " You are way off. </div>";
+                        $ans_string .= "Many were wrong.";
+                    }
+                    if($incorrect == 2){
+                        $message .= " You are 2 off. </div>";
+                        $ans_string .= "Two were wrong.";
+                    }
+                    if($incorrect == 1){
+                        $message .= " You are 1 off. </div>";
+                        $ans_string .= "One was wrong.";
+                    }
                 }
+                array_unshift($_SESSION["previous_guesses"], $ans_string);
             }
         } else {
             $message = "<div class=\"alert alert-danger\" role=\"alert\">
