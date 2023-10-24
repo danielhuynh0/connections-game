@@ -35,7 +35,7 @@
                         $student_one = $current_game;
 
                         //$student_keys = array_keys($student_one);
-                        shuffle($student_one);
+                        //shuffle($student_one);
 
                         $html = "";
 
@@ -44,7 +44,9 @@
                         while($count<count($student_one)){
                             $html .= "<div class=\"row\">\n";
                             for($x = 0; $x<4; $x++){
-                                $html .= "\t<div class=\"col\">\n \t\t <label>" . array_keys($student_one[$count])[0] . "</label>\n</div>\n";
+                                $key = array_keys($student_one[$count])[0];
+                                $html .= "\t<div class=\"col\">\n \t\t <label>" . $key . 
+                                ": " . $student_one[$count][$key][0] . "</label>\n</div>\n";
                                 $count++;
                             }
                             $html .= "</div>\n";
