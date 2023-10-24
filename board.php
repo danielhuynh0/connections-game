@@ -58,23 +58,21 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex flex-row">
-            <div class="row">
-                <div class="col-xs-12">
-                    <form action="?command=answer" method="post">
-                        <div class="mb-3">
-                            <label for="answer" class="form-label">Guess: </label>
-                            <input type="text" class="form-control" id="con-answer" name="answer">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-            </div>
-            <div style="margin-top: 15px;">
-                <form action="?command=logout" method="post">
-                    <button type="submit" class="btn btn-primary">Quit</button>
+        <div class="row">
+            <div class="col-xs-12">
+                <form action="?command=answer" method="post">
+                    <div class="mb-3">
+                        <label for="answer" class="form-label">Guess: </label>
+                        <input type="text" class="form-control" id="con-answer" name="answer">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
+        </div>
+        <div style="margin-top: 15px;">
+            <form action="?command=logout" method="post">
+                <button type="submit" class="btn btn-primary">Quit</button>
+            </form>
         </div>
         <div style="margin-top: 15px;">
             <h4>You're previous guesses:</h4>
