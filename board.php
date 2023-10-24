@@ -80,7 +80,7 @@
             </form>
         </div>
         <div style="margin-top: 15px;">
-            <h4>You're previous guesses:</h4>
+            <h4>Your previous guesses:</h4>
             <?php
                 foreach($previous_guesses as $guess){
                     $label = "<p>" . $guess . "</p>";
