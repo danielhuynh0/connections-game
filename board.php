@@ -63,6 +63,10 @@
                 </div>
             </div>
         </div>
+        <div>
+            <p>To play, try to form four categories using the words provided. Guess a category by typing the words' numbers below separated by
+                spaces (ie 1 2 3 4)</p>
+        </div>
         <div class="row">
             <div class="col-xs-12">
                 <form action="?command=answer" method="post">
