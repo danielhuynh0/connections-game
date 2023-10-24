@@ -97,7 +97,6 @@ class TriviaController {
                 break;
             case "logout":
                 $this->logout();
-                break;
             default:
                 $this->showWelcome();
                 break;
