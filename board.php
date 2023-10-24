@@ -75,7 +75,7 @@
             </div>
         </div>
         <div style="margin-top: 15px;">
-            <form action="?command=logout" method="post">
+            <form action="?command=gameover" method="post">
                 <button type="submit" class="btn btn-primary">Quit</button>
             </form>
         </div>
