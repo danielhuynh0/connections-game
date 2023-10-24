@@ -27,7 +27,6 @@
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
                     </div>
-
                     <button type="submit" class="btn btn-primary">Start</button>
                 </form>
                 </div>

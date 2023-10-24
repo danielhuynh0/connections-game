@@ -39,24 +39,27 @@ class TriviaController {
             return $_SESSION["current_game"];
         }
         else {
-            $current_game = [];
-            $cats_chosen = array();
-            while (count($cats_chosen) < 4) {
+            $current_game_w = [];
+            while (count($current_game_w) < 16) {
                 $rand_cat = rand(0, count($this->categories) - 1);
-                if (in_array($rand_cat, $cats_chosen)) {
-                    continue;
-                }
-                array_push($cats_chosen, $rand_cat);
-
                 $category = $this->categories[$rand_cat];
                 $cat_name = $category["category"];
                 for ($i = 0; $i < count($category["words"]); $i++) {
                     $cur_word = $category["words"][$i];
                     $cur_word = strtolower($cur_word);
 
-                    $temp = array($cur_word => $cat_name);
-                    array_push($current_game, $temp);
+                    $temp = array($cur_word, $cat_name);
+                    if (in_array($temp, $current_game_w)) {
+                        continue;
+                    }
+                    array_push($current_game_w, $temp);
                 }
+            }
+            shuffle($current_game_w);
+            $current_game=[];
+            for($x=0; $x<16; $x++){
+                $temp2 = array(($x+1) => ($current_game_w[$x]));
+                array_push($current_game, $temp2);
             }
             $_SESSION["current_game"] = $current_game;
             return $current_game;
@@ -136,9 +139,9 @@ class TriviaController {
             $answer = $_POST["answer"];
 
             $guesses = explode(" ", $answer);
-            $guesses = array_map('strtolower', $guesses);
+            //$guesses = array_map('strtolower', $guesses);
             
-            if(len($guesses) != 4){
+            if(count($guesses) != 4){
                 $message = "<div class=\"alert alert-danger\" role=\"alert\">
                 Please enter 4 answers!
                 </div>";
