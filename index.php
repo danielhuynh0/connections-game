@@ -1,3 +1,8 @@
+<!-- 
+    Daniel Huynh (tap7ke)
+    Eric Li (zzf5jx)
+-->
+
 <?php
 
 error_reporting(E_ALL);
