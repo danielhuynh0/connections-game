@@ -89,6 +89,12 @@ class TriviaController {
             case "answer":
                 $this->submitCategories();
                 break;
+            case "playagain":
+                $_SESSION["win"] = false;
+                $_SESSION["previous_guesses"] = [];
+                $_SESSION["score"] = 0;
+                $this->showCategories();
+                break;
             case "logout":
                 $this->logout();
             default:
@@ -195,36 +201,29 @@ class TriviaController {
                         $message = "<div class=\"alert alert-success\" role=\"alert\">
                         You win!
                         </div>";
-                        //unset($_SESSION["current_game"]);
-
+                        unset($_SESSION["current_game"]);
+                        $_SESSION["win"] = true;
+                        include("gameover.php");
                         
+                    } else {
+                        $this->showCategories($message);
                     }
                 } else {
                     $message = "<div class=\"alert alert-danger\" role=\"alert\">
-                    Incorrect!";
-
-                    if($incorrect>2){
-                        $message .= " You are way off. </div>";
-                        $ans_string .= "Many were wrong.";
-                    }
-                    if($incorrect == 2){
-                        $message .= " You are 2 off. </div>";
-                        $ans_string .= "Two were wrong.";
-                    }
-                    if($incorrect == 1){
-                        $message .= " You are 1 off. </div>";
-                        $ans_string .= "One was wrong.";
-                    }
+                    Incorrect!
+                    </div>";
+                    $_SESSION["score"] += 1;
+                    $previousGuess = [$answer, $incorrect];
+                    array_push($_SESSION["previous_guesses"], $previousGuess);
+                    $this->showCategories($message);
                 }
-                array_unshift($_SESSION["previous_guesses"], $ans_string);
             }
         } else {
             $message = "<div class=\"alert alert-danger\" role=\"alert\">
             Please enter an answer!
             </div>";
+            $this->showCategories($message);
         }
-
-        $this->showCategories($message);
     }
 
     /**
@@ -251,6 +250,7 @@ class TriviaController {
         session_destroy();
 
         session_start();
+
     }
 
 }
