@@ -40,8 +40,14 @@ class TriviaController {
         }
         else {
             $current_game = [];
-            while (count($current_game) < 16) {
+            $cats_chosen = array();
+            while (count($cats_chosen) < 4) {
                 $rand_cat = rand(0, count($this->categories) - 1);
+                if (in_array($rand_cat, $cats_chosen)) {
+                    continue;
+                }
+                array_push($cats_chosen, $rand_cat);
+
                 $category = $this->categories[$rand_cat];
                 $cat_name = $category["category"];
                 for ($i = 0; $i < count($category["words"]); $i++) {
@@ -49,9 +55,6 @@ class TriviaController {
                     $cur_word = strtolower($cur_word);
 
                     $temp = array($cur_word => $cat_name);
-                    if (in_array($temp, $current_game)) {
-                        continue;
-                    }
                     array_push($current_game, $temp);
                 }
             }
