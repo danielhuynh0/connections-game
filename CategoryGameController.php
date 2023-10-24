@@ -5,7 +5,7 @@
 
 <?php
 
-class TriviaController {
+class CategoryGameController {
 
     private $categories = [];
 
